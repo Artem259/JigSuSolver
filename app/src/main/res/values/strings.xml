@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">JigSuSolver</string>
+    <string name="app_title">JigSudoku Solver</string>
+
+    <string name="grid_move_button">Move</string>
+    <string name="grid_regions_button">Regions</string>
+    <string name="grid_cells_button">Cells</string>
+
+    <string name="scan_image_button">Import</string>
+    <string name="reset_button">Reset</string>
+    <string name="validate_button">Check</string>
+    <string name="solve_button">Solve</string>
+
+    <string-array name="sudoku_types">
+        <item>Classic</item>
+        <item>Jigsaw</item>
+    </string-array>
+
+    <string-array name="classic_sudoku_sizes">
+        <item>9x9</item>
+        <item>16x16</item>
+    </string-array>
+    <string-array name="jigsaw_sudoku_sizes">
+        <item>5x5</item>
+        <item>6x6</item>
+        <item>7x7</item>
+        <item>8x8</item>
+        <item>9x9</item>
+        <item>10x10</item>
+        <item>11x11</item>
+        <item>12x12</item>
+        <item>13x13</item>
+        <item>14x14</item>
+        <item>15x15</item>
+        <item>16x16</item>
+    </string-array>
+</resources>

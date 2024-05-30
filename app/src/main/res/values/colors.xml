@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimaryDark">@color/colorBackground</color>
+    <color name="colorBackground">#FF000000</color>
+    <color name="colorButton">#FF1C1C1C</color>
+    <color name="colorButtonPressed">#FF373737</color>
+    <color name="colorText">#FFE6E6E6</color>
+
+    <color name="colorGrid">#FFAAAAAA</color>
+    <color name="colorRegions">#FF9999EE</color>
+
+    <color name="regionError">#AA451F1F</color>
+    <color name="colorTextError">#FFCC4444</color>
+</resources>
