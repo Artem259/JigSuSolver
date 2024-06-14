@@ -15,6 +15,7 @@ import com.jigsusolver.R
 import com.jigsusolver.sudoku.SudokuProcessor
 import com.jigsusolver.sudoku.dataproc.regions.optimizers.SudokuRegionsOptimizer
 import com.jigsusolver.sudoku.dataproc.sudoku.solvers.SudokuSolver
+import com.jigsusolver.sudoku.dataproc.sudoku.validators.SudokuValidator
 import com.jigsusolver.sudoku.models.SudokuInfo
 import com.jigsusolver.sudoku.models.SudokuLabels
 import com.jigsusolver.sudoku.models.SudokuType
@@ -22,6 +23,12 @@ import com.jigsusolver.sudoku.models.regions.SudokuRegions
 import com.jigsusolver.sudoku.models.sudoku.Sudoku
 import com.jigsusolver.sudoku.utils.Utils
 import com.jigsusolver.ui.data.GridAction
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeout
 import org.opencv.android.OpenCVLoader
 import org.opencv.core.Size
 import org.opencv.imgcodecs.Imgcodecs
@@ -136,11 +143,28 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun solveButtonClicked() {
-        try {
-            val solvedSudoku = SudokuSolver().solve(sudokuGridView.getSudoku()) ?: throw Exception()
-            sudokuGridView.setSudoku(solvedSudoku)
-        } catch (e: Exception) {
-            validateButtonClicked()
+        val downResource = R.drawable.button_down
+        val upResource = R.drawable.button_up
+        val solvingTimeout = 5000L // TODO const
+
+        solveButton.setBackgroundResource(downResource)
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                withTimeout(solvingTimeout) {
+                    val sudoku = sudokuGridView.getSudoku()
+                    require(SudokuValidator().isValidSudoku(sudoku))
+                    val solvedSudoku = SudokuSolver().solve(sudoku) ?: throw Exception()
+
+                    withContext(Dispatchers.Main) {
+                        sudokuGridView.setSudoku(solvedSudoku)
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    validateButtonClicked()
+                }
+            }
+            solveButton.setBackgroundResource(upResource)
         }
     }
 
@@ -240,6 +264,28 @@ class MainActivity : AppCompatActivity() {
     private fun scanImage() {
         getContent.launch("image/*")
     }
+
+//    private fun solveSudoku(sudoku: Sudoku): Sudoku {
+//        val solvingTimeout = 10000L // TODO const
+//
+//        CoroutineScope(Dispatchers.IO).launch {
+//            try {
+//                withTimeout(solvingTimeout) {
+//                    // Simulate a heavy computation task
+//                    val result = heavyComputation()
+//
+//                    // Update the UI with the result on the main thread
+//                    withContext(Dispatchers.Main) {
+//                        // Update UI here
+//                    }
+//                }
+//            } catch (e: TimeoutCancellationException) {
+//                withContext(Dispatchers.Main) {
+//                    // Handle timeout (e.g., show a message to the user)
+//                }
+//            }
+//        }
+//    }
 
     private inner class SudokuTypeSpinnerListener : AdapterView.OnItemSelectedListener {
         override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {

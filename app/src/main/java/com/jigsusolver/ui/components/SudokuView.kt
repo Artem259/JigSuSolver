@@ -10,7 +10,7 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import com.jigsusolver.R
 import com.jigsusolver.sudoku.dataproc.regions.optimizers.DfsRegionsOptimizer
-import com.jigsusolver.sudoku.dataproc.regions.validators.SudokuRegionsValidator
+import com.jigsusolver.sudoku.dataproc.sudoku.validators.SudokuValidator
 import com.jigsusolver.sudoku.models.sudoku.MutableSudoku
 import com.jigsusolver.sudoku.models.sudoku.Sudoku
 import com.jigsusolver.sudoku.utils.Utils
@@ -202,7 +202,7 @@ class SudokuView @JvmOverloads constructor(
         val sudokuSize = sudoku.size
         val cellSize = width / sudokuSize.toFloat()
 
-        val errorRegions = SudokuRegionsValidator(sudoku.type).extractErrorRegions(sudoku.regions)
+        val errorRegions = SudokuValidator().extractErrorRegions(sudoku)
         for (row in 0 until sudokuSize) {
             for (col in 0 until sudokuSize) {
                 val startX = col * cellSize
@@ -264,7 +264,7 @@ class SudokuView @JvmOverloads constructor(
         textErrorPaint.textSize = (cellSize / sudoku.labels.maxLength * 1.4f).coerceAtMost(cellSize * 0.8f)
 
         val errorValues = if (isValidation) {
-            findErrorValues()
+            SudokuValidator().extractErrorValues(sudoku)
         } else {
             null
         }
@@ -300,23 +300,6 @@ class SudokuView @JvmOverloads constructor(
         col = col.coerceIn(0, sudoku.size - 1)
 
         return Pair(row, col)
-    }
-
-    private fun findErrorValues(): List<Pair<Int, Int>> {
-        val errorValues = mutableListOf<Pair<Int, Int>>()
-
-        for (row in 0 until sudoku.size) {
-            for (col in 0 until sudoku.size) {
-                val value = sudoku.values[row][col]
-                if (sudoku.regionValues(sudoku.regions[row, col]).count { it == value } > 1
-                    || sudoku.rowValues(row).count { it == value } > 1
-                    || sudoku.colValues(col).count { it == value } > 1) {
-                    errorValues.add(Pair(row, col))
-                }
-            }
-        }
-
-        return errorValues
     }
 
     private inner class ScaleListener : ScaleGestureDetector.SimpleOnScaleGestureListener() {

@@ -1,3 +1,0 @@
-C:/Tests/JigSuSolver/opencv/.cxx/Debug/u5h47123/x86/CMakeFiles/opencv_jni_shared.dir
-C:/Tests/JigSuSolver/opencv/.cxx/Debug/u5h47123/x86/CMakeFiles/edit_cache.dir
-C:/Tests/JigSuSolver/opencv/.cxx/Debug/u5h47123/x86/CMakeFiles/rebuild_cache.dir
